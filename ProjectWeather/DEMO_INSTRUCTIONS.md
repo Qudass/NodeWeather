@@ -3,10 +3,12 @@
 ## How to Run the Application
 
 1. **Start the server**:
+
    ```bash
    cd ProjectWeather
    npx serve .
    ```
+
    Or use any local server like Live Server in VS Code.
 
 2. **Open your browser** and navigate to `http://localhost:3000` (or the port shown by your server).
@@ -14,12 +16,14 @@
 ## New Features & Design Highlights
 
 ### 🎨 **Modern Design**
+
 - **Glassmorphism UI**: Beautiful glass-effect cards with blur backgrounds
 - **Animated Sky Background**: Floating clouds and rotating sun
 - **Gradient Themes**: Sky-inspired color schemes
 - **Smooth Animations**: Micro-interactions and transitions throughout
 
 ### 🌟 **Enhanced Functionality**
+
 - **Weather Icons**: Dynamic icons based on weather conditions
 - **Smart Date Formatting**: Shows "Today", "Tomorrow", or formatted dates
 - **Loading States**: Beautiful loading animations while fetching data
@@ -27,11 +31,13 @@
 - **Success Feedback**: Visual confirmation when adding favorites
 
 ### 📱 **Responsive Design**
+
 - **Mobile-First**: Optimized for all screen sizes
 - **Touch-Friendly**: Large tap targets and smooth interactions
 - **Adaptive Layout**: Content reorganizes beautifully on different screens
 
 ### ✨ **Cool Interactions**
+
 - **Hover Effects**: Shimmer animations on interactive elements
 - **Card Animations**: Staggered entrance animations for weather cards
 - **Button Feedback**: Visual confirmation for user actions

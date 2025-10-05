@@ -10,19 +10,19 @@ import {
 
 // Weather condition icons mapping
 const weatherIcons = {
-  'clear': 'fas fa-sun',
-  'sunny': 'fas fa-sun',
-  'partly-cloudy': 'fas fa-cloud-sun',
-  'cloudy': 'fas fa-cloud',
-  'overcast': 'fas fa-cloud',
-  'rain': 'fas fa-cloud-rain',
-  'showers': 'fas fa-cloud-rain',
-  'snow': 'fas fa-snowflake',
-  'fog': 'fas fa-smog',
-  'wind': 'fas fa-wind',
-  'storm': 'fas fa-bolt',
-  'thunderstorm': 'fas fa-bolt',
-  'default': 'fas fa-cloud-sun'
+  clear: "fas fa-sun",
+  sunny: "fas fa-sun",
+  "partly-cloudy": "fas fa-cloud-sun",
+  cloudy: "fas fa-cloud",
+  overcast: "fas fa-cloud",
+  rain: "fas fa-cloud-rain",
+  showers: "fas fa-cloud-rain",
+  snow: "fas fa-snowflake",
+  fog: "fas fa-smog",
+  wind: "fas fa-wind",
+  storm: "fas fa-bolt",
+  thunderstorm: "fas fa-bolt",
+  default: "fas fa-cloud-sun"
 };
 
 function getWeatherIcon(condition) {
@@ -30,7 +30,7 @@ function getWeatherIcon(condition) {
 
   const conditionLower = condition.toLowerCase();
   for (const [key, icon] of Object.entries(weatherIcons)) {
-    if (conditionLower.includes(key.replace('-', ' '))) {
+    if (conditionLower.includes(key.replace("-", " "))) {
       return icon;
     }
   }
@@ -44,14 +44,14 @@ function formatDate(dateString) {
   tomorrow.setDate(tomorrow.getDate() + 1);
 
   if (date.toDateString() === today.toDateString()) {
-    return 'Сьогодні';
+    return "Сьогодні";
   } else if (date.toDateString() === tomorrow.toDateString()) {
-    return 'Завтра';
+    return "Завтра";
   } else {
-    return date.toLocaleDateString('uk-UA', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long'
+    return date.toLocaleDateString("uk-UA", {
+      weekday: "long",
+      day: "numeric",
+      month: "long"
     });
   }
 }
@@ -66,14 +66,14 @@ $(document).ready(function () {
       let out = "";
 
       // Filter cities by selected country
-      const filteredCities = cities.filter(city => city.country === selectedCountry);
+      const filteredCities = cities.filter((city) => city.country === selectedCountry);
 
       if (filteredCities.length > 0) {
         for (const city of filteredCities) {
           out += `<p data-lat="${city.coord.lat}" data-lon="${city.coord.lon}">${city.name}</p>`;
         }
         $("#city-list").html(out);
-        $("#city-search").prop('disabled', false).focus();
+        $("#city-search").prop("disabled", false).focus();
 
         // Add click handlers to city items
         $("#city-list p").on("click", function () {
@@ -106,8 +106,8 @@ $(document).ready(function () {
       };
 
       // Add visual feedback
-      $("#city-list p").removeClass('selected');
-      $cityElement.addClass('selected');
+      $("#city-list p").removeClass("selected");
+      $cityElement.addClass("selected");
 
       // Add to history
       addHistory({ city: selectedCity.name });
@@ -117,7 +117,7 @@ $(document).ready(function () {
       loadWeather(selectedCity.lat, selectedCity.lon, selectedCity.name);
 
       // Show add to favorites button
-      $("#add-fav").prop('disabled', false);
+      $("#add-fav").prop("disabled", false);
     }
 
     // Add to favorites
@@ -129,17 +129,17 @@ $(document).ready(function () {
         // Show success feedback
         const $btn = $(this);
         const originalText = $btn.html();
-        $btn.html('<i class="fas fa-check"></i> Додано!').prop('disabled', true);
+        $btn.html('<i class="fas fa-check"></i> Додано!').prop("disabled", true);
 
         setTimeout(() => {
-          $btn.html(originalText).prop('disabled', false);
+          $btn.html(originalText).prop("disabled", false);
         }, 2000);
       }
     });
 
     // Clear favorites
     $("#clear-fav").on("click", function () {
-      if (confirm('Ви впевнені, що хочете очистити всі улюблені міста?')) {
+      if (confirm("Ви впевнені, що хочете очистити всі улюблені міста?")) {
         clearFavorites();
         renderFavorites();
       }
@@ -147,7 +147,7 @@ $(document).ready(function () {
 
     // Clear history
     $("#clear-history").on("click", function () {
-      if (confirm('Ви впевнені, що хочете очистити історію пошуку?')) {
+      if (confirm("Ви впевнені, що хочете очистити історію пошуку?")) {
         clearHistory();
         renderHistory();
       }
@@ -169,7 +169,8 @@ $(document).ready(function () {
       }
 
       let out = favs
-        .map(f => `
+        .map(
+          (f) => `
           <li>
             <span class="favorite-city" data-lat="${f.lat}" data-lon="${f.lon}" data-name="${f.name}">
               <i class="fas fa-star"></i>
@@ -179,7 +180,8 @@ $(document).ready(function () {
               <i class="fas fa-times"></i>
             </button>
           </li>
-        `)
+        `
+        )
         .join("");
 
       $favoritesContainer.html(`<ul>${out}</ul>`);
@@ -222,14 +224,16 @@ $(document).ready(function () {
       }
 
       let out = hist
-        .map(h => `
+        .map(
+          (h) => `
           <li>
             <div class="history-item">
               <span class="history-city">${h.city}</span>
               <span class="history-date">${h.date}</span>
             </div>
           </li>
-        `)
+        `
+        )
         .join("");
 
       $historyContainer.html(`<ul>${out}</ul>`);
@@ -250,8 +254,8 @@ $(document).ready(function () {
       `);
 
       fetch(url)
-        .then(r => r.json())
-        .then(data => {
+        .then((r) => r.json())
+        .then((data) => {
           const days = data.days || [];
           let out = `
             <div class="weather-header">
@@ -268,13 +272,13 @@ $(document).ready(function () {
             const dateFormatted = formatDate(d.datetime);
 
             out += `
-              <div class="weather-card ${index === 0 ? 'today' : ''}">
+              <div class="weather-card ${index === 0 ? "today" : ""}">
                 <div class="weather-date">
                   <h4>
                     <i class="${iconClass}"></i>
                     ${dateFormatted}
                   </h4>
-                  <span class="weather-condition">${d.conditions || 'Без опису'}</span>
+                  <span class="weather-condition">${d.conditions || "Без опису"}</span>
                 </div>
                 
                 <div class="weather-details">
@@ -287,12 +291,12 @@ $(document).ready(function () {
                   
                   <div class="weather-detail">
                     <div class="weather-detail-label">Вологість</div>
-                    <div class="weather-detail-value">${d.humidity ?? '—'}%</div>
+                    <div class="weather-detail-value">${d.humidity ?? "—"}%</div>
                   </div>
                   
                   <div class="weather-detail">
                     <div class="weather-detail-label">Вітер</div>
-                    <div class="weather-detail-value">${d.windspeed ?? '—'} м/с</div>
+                    <div class="weather-detail-value">${d.windspeed ?? "—"} м/с</div>
                   </div>
                   
                   <div class="weather-detail">
@@ -302,7 +306,7 @@ $(document).ready(function () {
                   
                   <div class="weather-detail">
                     <div class="weather-detail-label">Хмарність</div>
-                    <div class="weather-detail-value">${d.cloudcover ?? '—'}%</div>
+                    <div class="weather-detail-value">${d.cloudcover ?? "—"}%</div>
                   </div>
                   
                   <div class="weather-detail">
@@ -316,18 +320,23 @@ $(document).ready(function () {
 
           $("#weather").html(out);
         })
-        .catch(e => {
-          console.error('Weather API Error:', e);
+        .catch((e) => {
+          console.error("Weather API Error:", e);
           $("#weather").html(`
             <div class="error-state">
               <i class="fas fa-exclamation-triangle weather-icon-large"></i>
               <h3>Помилка завантаження</h3>
               <p>Не вдалося завантажити прогноз погоди для ${cityName}. Спробуйте пізніше.</p>
-              <button onclick="loadWeather(${lat}, ${lon}, '${cityName}')" class="retry-btn">
+              <button id="retry-weather-btn" class="retry-btn">
                 <i class="fas fa-redo"></i> Спробувати знову
               </button>
             </div>
           `);
+
+          // Add click handler for retry button
+          $("#retry-weather-btn").on("click", function () {
+            loadWeather(lat, lon, cityName);
+          });
         });
     }
 
@@ -336,9 +345,9 @@ $(document).ready(function () {
     renderHistory();
 
     // Disable add to favorites button initially
-    $("#add-fav").prop('disabled', true);
+    $("#add-fav").prop("disabled", true);
 
     // Disable city search initially
-    $("#city-search").prop('disabled', true);
+    $("#city-search").prop("disabled", true);
   });
 });

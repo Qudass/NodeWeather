@@ -1,11 +1,12 @@
 {
   "name": "weather",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "jest --silent",
-    "prepare": "husky install"
+    "start": "serve ."
   },
   "dependencies": {
     "jquery": "^3.3.1",
@@ -13,13 +14,17 @@
   },
   "devDependencies": {
     "eslint": "^8.0.0",
-    "prettier": "^3.0.0",
     "husky": "^8.0.0",
-    "lint-staged": "^15.0.0",
     "jest": "^29.0.0",
-    "jsdom": "^22.0.0"
+    "jest-environment-jsdom": "^30.2.0",
+    "jsdom": "^22.0.0",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0"
   },
   "lint-staged": {
-    "*.{js,json,css,html}": ["prettier --write", "eslint --fix"]
+    "*.{js,json,css,html}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }

@@ -1,10 +1,4 @@
-import {
-  addFavorite,
-  getFavorites,
-  removeFavorite,
-  addHistory,
-  getHistory
-} from "./storage.js";
+import { addFavorite, getFavorites, removeFavorite, addHistory, getHistory } from "../storage.js";
 
 beforeEach(() => {
   localStorage.clear();
