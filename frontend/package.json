@@ -5,7 +5,7 @@
   "scripts": {
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "jest --silent",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --silent",
     "start": "serve ."
   },
   "dependencies": {

@@ -375,7 +375,8 @@ body {
 
 .city-list p:hover {
   background: rgba(255, 255, 255, 0.2);
-  transform: translateX(5px);
+  /* transform: translateX(5px); */
+  padding-left: 1.3rem;
 }
 
 /* Content grid */
@@ -667,7 +668,8 @@ body {
 .city-list p.selected {
   background: rgba(255, 255, 255, 0.3) !important;
   border-color: rgba(255, 255, 255, 0.5);
-  transform: translateX(10px);
+  /* transform: translateX(10px); */
+  padding-left: 1.7rem;
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
 }
 

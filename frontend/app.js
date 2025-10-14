@@ -5,8 +5,9 @@ import {
   clearFavorites,
   addHistory,
   getHistory,
-  clearHistory
-} from "./storage.js";
+  clearHistory,
+} from "./services/storageApi.js";
+import { fetchWeatherByCoords } from "./services/weatherService.js";
 
 // Weather condition icons mapping
 const weatherIcons = {
@@ -241,9 +242,6 @@ $(document).ready(function () {
 
     // Enhanced weather loading function
     function loadWeather(lat, lon, cityName) {
-      const VC_KEY = "YSJBGSYSQPENB9XUVRGNG37YZ";
-      const url = `https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/${lat},${lon}?unitGroup=metric&include=days&key=${VC_KEY}&contentType=json`;
-
       // Show loading state
       $("#weather").html(`
         <div class="loading-state">
@@ -253,8 +251,7 @@ $(document).ready(function () {
         </div>
       `);
 
-      fetch(url)
-        .then((r) => r.json())
+      fetchWeatherByCoords(lat, lon)
         .then((data) => {
           const days = data.days || [];
           let out = `
@@ -311,7 +308,9 @@ $(document).ready(function () {
                   
                   <div class="weather-detail">
                     <div class="weather-detail-label">Відчувається як</div>
-                    <div class="weather-detail-value">${Math.round(d.feelslike ?? d.temp)}°C</div>
+                    <div class="weather-detail-value">${Math.round(
+                      d.feelslike ?? d.temp
+                    )}°C</div>
                   </div>
                 </div>
               </div>

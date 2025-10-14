@@ -5,13 +5,19 @@ beforeEach(() => {
 });
 
 test("Додає місто в улюблені", () => {
-  addFavorite({ name: "Kyiv" });
-  expect(getFavorites()).toEqual([{ name: "Kyiv" }]);
+  const kyiv = { name: "Kyiv", lat: 50.45, lon: 30.52 };
+
+  addFavorite(kyiv);
+
+  expect(getFavorites()).toEqual([kyiv]);
 });
 
 test("Видаляє місто з улюблених", () => {
-  addFavorite({ name: "Lviv" });
+  const lviv = { name: "Lviv", lat: 49.84, lon: 24.03 };
+
+  addFavorite(lviv);
   removeFavorite("Lviv");
+
   expect(getFavorites()).toEqual([]);
 });
 
@@ -21,5 +27,5 @@ test("Додає запис в історію і зберігає максиму
   }
   const history = getHistory();
   expect(history.length).toBe(10);
-  expect(history[0].city).toBe("City12"); // останній додається першим
+  expect(history[0].city).toBe("City12");
 });
