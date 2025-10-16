@@ -5,7 +5,7 @@ import {
   clearFavorites,
   addHistory,
   getHistory,
-  clearHistory,
+  clearHistory
 } from "./services/storageApi.js";
 import { fetchWeatherByCoords } from "./services/weatherService.js";
 
@@ -308,9 +308,7 @@ $(document).ready(function () {
                   
                   <div class="weather-detail">
                     <div class="weather-detail-label">Відчувається як</div>
-                    <div class="weather-detail-value">${Math.round(
-                      d.feelslike ?? d.temp
-                    )}°C</div>
+                    <div class="weather-detail-value">${Math.round(d.feelslike ?? d.temp)}°C</div>
                   </div>
                 </div>
               </div>
