@@ -1,0 +1,4 @@
+node_modules
+frontend/vendor
+frontend/commits.log
+backend/src/db/migrations
