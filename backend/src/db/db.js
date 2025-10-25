@@ -19,7 +19,9 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
   db.run(
     `CREATE TABLE IF NOT EXISTS favorites (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      city TEXT UNIQUE NOT NULL
+      name TEXT UNIQUE NOT NULL,
+      lat REAL NOT NULL,
+      lon REAL NOT NULL
     )`,
     (err) => {
       if (err) {
@@ -31,8 +33,10 @@ export const db = new sqlite3.Database(DB_PATH, (err) => {
   db.run(
     `CREATE TABLE IF NOT EXISTS history (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date TEXT NOT NULL,
       city TEXT NOT NULL,
-      searched_at TEXT NOT NULL
+      temp REAL,
+      conditions TEXT
     )`,
     (err) => {
       if (err) {
