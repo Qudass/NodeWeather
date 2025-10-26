@@ -7,10 +7,14 @@ export const historyRouter = Router();
 historyRouter.get("/", async (req, res) => {
   try {
     const rows = await all(
-      `SELECT id, city, searched_at AS searchedAt
+      `SELECT
+         date,
+         city,
+         temp,
+         conditions
        FROM history
        ORDER BY id DESC
-       LIMIT 50`,
+       LIMIT 10`,
       []
     );
     res.json(rows);
@@ -20,29 +24,48 @@ historyRouter.get("/", async (req, res) => {
   }
 });
 
-// POST /api/history  body: { city: "Kyiv", searchedAt?: "2025-11-24T11:22:33.000Z" }
+// POST /api/history
 historyRouter.post("/", async (req, res) => {
   try {
-    const { city, searchedAt } = req.body;
+    let { date, city, temp, conditions } = req.body;
 
     if (!city || typeof city !== "string") {
       return res.status(400).json({ error: "City is required" });
     }
 
-    const timestamp =
-      typeof searchedAt === "string" && searchedAt.trim().length > 0
-        ? searchedAt
-        : new Date().toISOString();
+    if (!date || typeof date !== "string" || date.trim().length === 0) {
+      date = new Date().toISOString().split("T")[0];
+    }
+
+    if (typeof temp !== "number") {
+      temp = null;
+    }
+
+    if (typeof conditions !== "string") {
+      conditions = "";
+    }
 
     const result = await run(
-      "INSERT INTO history (city, searched_at) VALUES (?, ?)",
-      [city, timestamp]
+      "INSERT INTO history (date, city, temp, conditions) VALUES (?, ?, ?, ?)",
+      [date, city, temp, conditions]
+    );
+
+    await run(
+      `DELETE FROM history
+       WHERE id NOT IN (
+         SELECT id FROM history
+         ORDER BY id DESC
+         LIMIT 10
+       )`,
+      []
     );
 
     res.status(201).json({
       id: result.lastID,
+      date,
       city,
-      searchedAt: timestamp
+      temp,
+      conditions
     });
   } catch (err) {
     console.error("Failed to add history record:", err);
