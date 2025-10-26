@@ -7,7 +7,7 @@ export const favoritesRouter = Router();
 favoritesRouter.get("/", async (req, res) => {
   try {
     const rows = await all(
-      "SELECT id, city FROM favorites ORDER BY id DESC",
+      "SELECT name, lat, lon FROM favorites ORDER BY id DESC",
       []
     );
     res.json(rows);
@@ -17,20 +17,29 @@ favoritesRouter.get("/", async (req, res) => {
   }
 });
 
-// POST /api/favorites  body: { city: "Kyiv" }
+// POST /api/favorites
 favoritesRouter.post("/", async (req, res) => {
   try {
-    const { city } = req.body;
+    const { name, lat, lon } = req.body;
 
-    if (!city || typeof city !== "string") {
-      return res.status(400).json({ error: "City is required" });
+    if (
+      !name ||
+      typeof name !== "string" ||
+      typeof lat !== "number" ||
+      typeof lon !== "number"
+    ) {
+      return res.status(400).json({ error: "Invalid city payload" });
     }
 
-    await run("INSERT OR IGNORE INTO favorites (city) VALUES (?)", [city]);
+    await run(
+      "INSERT OR IGNORE INTO favorites (name, lat, lon) VALUES (?, ?, ?)",
+      [name, lat, lon]
+    );
 
-    const row = await get("SELECT id, city FROM favorites WHERE city = ?", [
-      city
-    ]);
+    const row = await get(
+      "SELECT name, lat, lon FROM favorites WHERE name = ?",
+      [name]
+    );
 
     res.status(201).json(row);
   } catch (err) {
@@ -39,15 +48,17 @@ favoritesRouter.post("/", async (req, res) => {
   }
 });
 
-// DELETE /api/favorites/:id
-favoritesRouter.delete("/:id", async (req, res) => {
+// DELETE /api/favorites/:name
+favoritesRouter.delete("/:name", async (req, res) => {
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id)) {
-      return res.status(400).json({ error: "Invalid id" });
+    const rawName = req.params.name;
+    const name = decodeURIComponent(rawName);
+
+    if (!name || typeof name !== "string") {
+      return res.status(400).json({ error: "Invalid city name" });
     }
 
-    const result = await run("DELETE FROM favorites WHERE id = ?", [id]);
+    const result = await run("DELETE FROM favorites WHERE name = ?", [name]);
 
     res.json({ success: true, deleted: result.changes });
   } catch (err) {
