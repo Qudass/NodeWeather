@@ -593,7 +593,8 @@ body {
 .favorites-list li:hover,
 .history-list li:hover {
   background: rgba(255, 255, 255, 0.15);
-  transform: translateX(3px);
+  /* transform: translateX(3px); */
+  padding-left: 1.3rem;
 }
 
 .favorites-list button {
