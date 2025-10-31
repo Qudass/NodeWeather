@@ -99,7 +99,7 @@ $(document).ready(function () {
     });
 
     // City selection function
-    function selectCity($cityElement) {
+    async function selectCity($cityElement) {
       selectedCity = {
         lat: $cityElement.data("lat"),
         lon: $cityElement.data("lon"),
@@ -110,9 +110,13 @@ $(document).ready(function () {
       $("#city-list p").removeClass("selected");
       $cityElement.addClass("selected");
 
-      // Add to history
-      addHistory({ city: selectedCity.name });
-      renderHistory();
+      try {
+        // Add to history
+        await addHistory({ city: selectedCity.name });
+        renderHistory();
+      } catch (e) {
+        console.error("Failed to add history record:", e);
+      }
 
       // Load weather data
       loadWeather(selectedCity.lat, selectedCity.lon, selectedCity.name);
@@ -121,10 +125,13 @@ $(document).ready(function () {
       $("#add-fav").prop("disabled", false);
     }
 
+
     // Add to favorites
-    $("#add-fav").on("click", function () {
-      if (selectedCity) {
-        addFavorite(selectedCity);
+    $("#add-fav").on("click", async function () {
+      if (!selectedCity) return;
+
+      try {
+        await addFavorite(selectedCity);
         renderFavorites();
 
         // Show success feedback
@@ -135,43 +142,65 @@ $(document).ready(function () {
         setTimeout(() => {
           $btn.html(originalText).prop("disabled", false);
         }, 2000);
+      } catch (e) {
+        console.error("Failed to add favorite:", e);
+        window.alert("Не вдалося додати місто до улюблених. Спробуйте пізніше.");
       }
     });
+
 
     // Clear favorites
-    $("#clear-fav").on("click", function () {
-      if (confirm("Ви впевнені, що хочете очистити всі улюблені міста?")) {
-        clearFavorites();
+    $("#clear-fav").on("click", async function () {
+      if (!confirm("Ви впевнені, що хочете очистити всі улюблені міста?")) {
+        return;
+      }
+
+      try {
+        await clearFavorites();
         renderFavorites();
+      } catch (e) {
+        console.error("Failed to clear favorites:", e);
+        window.alert("Не вдалося очистити улюблені міста. Спробуйте пізніше.");
       }
     });
+
 
     // Clear history
-    $("#clear-history").on("click", function () {
-      if (confirm("Ви впевнені, що хочете очистити історію пошуку?")) {
-        clearHistory();
+    $("#clear-history").on("click", async function () {
+      if (!confirm("Ви впевнені, що хочете очистити історію пошуку?")) {
+        return;
+      }
+
+      try {
+        await clearHistory();
         renderHistory();
+      } catch (e) {
+        console.error("Failed to clear history:", e);
+        window.alert("Не вдалося очистити історію пошуку. Спробуйте пізніше.");
       }
     });
 
+
     // Render favorites with enhanced UI
-    function renderFavorites() {
-      const favs = getFavorites();
+    async function renderFavorites() {
       const $favoritesContainer = $("#favorites");
 
-      if (favs.length === 0) {
-        $favoritesContainer.html(`
+      try {
+        const favs = await getFavorites();
+
+        if (!Array.isArray(favs) || favs.length === 0) {
+          $favoritesContainer.html(`
           <div class="empty-state">
             <i class="fas fa-heart-broken"></i>
             <p>Немає улюблених міст</p>
           </div>
         `);
-        return;
-      }
+          return;
+        }
 
-      let out = favs
-        .map(
-          (f) => `
+        let out = favs
+          .map(
+            (f) => `
           <li>
             <span class="favorite-city" data-lat="${f.lat}" data-lon="${f.lon}" data-name="${f.name}">
               <i class="fas fa-star"></i>
@@ -182,51 +211,75 @@ $(document).ready(function () {
             </button>
           </li>
         `
-        )
-        .join("");
+          )
+          .join("");
 
-      $favoritesContainer.html(`<ul>${out}</ul>`);
+        $favoritesContainer.html(`<ul>${out}</ul>`);
 
-      // Add click handlers
-      $favoritesContainer.find(".favorite-city").on("click", function () {
-        const cityData = {
-          lat: $(this).data("lat"),
-          lon: $(this).data("lon"),
-          name: $(this).data("name")
-        };
+        // Add click handlers
+        $favoritesContainer.find(".favorite-city").on("click", async function () {
+          const cityData = {
+            lat: $(this).data("lat"),
+            lon: $(this).data("lon"),
+            name: $(this).data("name")
+          };
 
-        selectedCity = cityData;
-        loadWeather(cityData.lat, cityData.lon, cityData.name);
-        addHistory({ city: cityData.name });
-        renderHistory();
-      });
+          selectedCity = cityData;
 
-      $favoritesContainer.find("button").on("click", function (e) {
-        e.stopPropagation();
-        const cityName = $(this).data("city");
-        removeFavorite(cityName);
-        renderFavorites();
-      });
-    }
+          try {
+            await addHistory({ city: cityData.name });
+            await renderHistory();
+          } catch (e) {
+            console.error("Failed to add history record from favorites:", e);
+          }
 
-    // Render history with enhanced UI
-    function renderHistory() {
-      const hist = getHistory();
-      const $historyContainer = $("#history");
+          loadWeather(cityData.lat, cityData.lon, cityData.name);
+        });
 
-      if (hist.length === 0) {
-        $historyContainer.html(`
+        $favoritesContainer.find("button").on("click", async function (e) {
+          e.stopPropagation();
+          const cityName = $(this).data("city");
+
+          try {
+            await removeFavorite(cityName);
+            await renderFavorites();
+          } catch (e2) {
+            console.error("Failed to remove favorite:", e2);
+            window.alert("Не вдалося видалити місто з улюблених. Спробуйте пізніше.");
+          }
+        });
+      } catch (e) {
+        console.error("Failed to render favorites:", e);
+        $favoritesContainer.html(`
           <div class="empty-state">
-            <i class="fas fa-clock"></i>
-            <p>Історія порожня</p>
+            <i class="fas fa-triangle-exclamation"></i>
+            <p>Помилка завантаження улюблених міст</p>
           </div>
         `);
-        return;
       }
+    }
 
-      let out = hist
-        .map(
-          (h) => `
+
+    // Render history with enhanced UI
+    async function renderHistory() {
+      const $historyContainer = $("#history");
+
+      try {
+        const hist = await getHistory();
+
+        if (!Array.isArray(hist) || hist.length === 0) {
+          $historyContainer.html(`
+          <div class="empty-state">
+            <i class="fas fa-clock"></i>
+            <p>Історія порожня</п>
+          </div>
+        `);
+          return;
+        }
+
+        let out = hist
+          .map(
+            (h) => `
           <li>
             <div class="history-item">
               <span class="history-city">${h.city}</span>
@@ -234,11 +287,21 @@ $(document).ready(function () {
             </div>
           </li>
         `
-        )
-        .join("");
+          )
+          .join("");
 
-      $historyContainer.html(`<ul>${out}</ul>`);
+        $historyContainer.html(`<ul>${out}</ul>`);
+      } catch (e) {
+        console.error("Failed to render history:", e);
+        $historyContainer.html(`
+          <div class="empty-state">
+            <i class="fas fa-triangle-exclamation"></i>
+            <p>Помилка завантаження історії</p>
+          </div>
+        `);
+      }
     }
+
 
     // Enhanced weather loading function
     function loadWeather(lat, lon, cityName) {
