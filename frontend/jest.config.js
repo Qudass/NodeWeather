@@ -1,5 +1,13 @@
 export default {
   testEnvironment: "jsdom",
   transform: {},
-  testMatch: ["**/tests/**/*.test.js"]
+  verbose: true,
+  moduleFileExtensions: ["js", "json"],
+  setupFiles: ["<rootDir>/tests/setupJest.js"],
 };
+
+// export default {
+//   testEnvironment: "jsdom",
+//   transform: {},
+//   testMatch: ["**/tests/**/*.test.js"]
+// };
