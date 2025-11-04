@@ -7,7 +7,10 @@ import {
   addHistory,
   getHistory,
   clearHistory,
-  getHistoryByCity
+  getHistoryByCity,
+  getStorageStats,
+  resetAll,
+  debugStorage,
 } from "../storage.js";
 
 beforeEach(() => {
@@ -162,5 +165,45 @@ describe("history storage", () => {
 
     expect(lvivHistory).toHaveLength(1);
     expect(lvivHistory[0].city).toBe("Lviv");
+  });
+});
+
+describe("aggregate helpers", () => {
+  test("getStorageStats returns correct counts", () => {
+    addFavorite({ name: "Kyiv", lat: 50.45, lon: 30.52 });
+    addHistory({ date: "2025-01-01", city: "Kyiv" });
+    addHistory({ date: "2025-01-02", city: "Lviv" });
+
+    const stats = getStorageStats();
+
+    expect(stats).toEqual({
+      favoritesCount: 1,
+      historyCount: 2
+    });
+  });
+
+  test("resetAll clears both favorites and history", () => {
+    addFavorite({ name: "Kyiv", lat: 50.45, lon: 30.52 });
+    addHistory({ date: "2025-01-01", city: "Kyiv" });
+
+    resetAll();
+
+    expect(getFavorites()).toEqual([]);
+    expect(getHistory()).toEqual([]);
+  });
+
+  test("debugStorage logs grouped information", () => {
+    const groupSpy = jest.spyOn(console, "group").mockImplementation(() => {});
+    const logSpy = jest.spyOn(console, "log").mockImplementation(() => {});
+    const groupEndSpy = jest.spyOn(console, "groupEnd").mockImplementation(() => {});
+
+    addFavorite({ name: "Kyiv", lat: 50.45, lon: 30.52 });
+    addHistory({ date: "2025-01-01", city: "Kyiv" });
+
+    debugStorage();
+
+    expect(groupSpy).toHaveBeenCalled();
+    expect(logSpy).toHaveBeenCalled();
+    expect(groupEndSpy).toHaveBeenCalled();
   });
 });
