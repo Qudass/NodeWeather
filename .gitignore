@@ -15,3 +15,7 @@ dist/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Stryker
+.stryker-tmp
+reports

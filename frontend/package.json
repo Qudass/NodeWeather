@@ -4,11 +4,12 @@
   "type": "module",
   "scripts": {
     "start": "serve .",
-    "test": "NODE_OPTIONS=--experimental-vm-modules jest --silent",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --silent",
+    "test:mut": "stryker run"
   },
   "dependencies": {
     "jquery": "^3.3.1",
