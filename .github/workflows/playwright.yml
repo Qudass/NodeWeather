@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: lts/*
 
+      # ---- ROOT ----
+      - name: Install root dependencies
+        run: npm ci
+
       # ---- BACKEND ----
       - name: Install backend dependencies
         working-directory: ./backend
