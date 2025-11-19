@@ -13,13 +13,16 @@ test.describe("NodeWeather E2E", () => {
   }) => {
     await page.goto("/");
 
+    await page.waitForResponse((resp) =>
+      resp.url().includes("current.city.list.json") && resp.ok()
+    );
+
     await page.selectOption("#country-select", { label: "🇺🇦 Україна" });
 
-    await page.waitForSelector("#city-list p");
-
     const firstCity = page.locator("#city-list p").first();
-    const cityName = await firstCity.textContent();
+    await expect(firstCity).toBeVisible();
 
+    const cityName = (await firstCity.textContent())?.trim();
     await firstCity.click();
 
     const forecastHeading = page.getByRole("heading", {
@@ -31,7 +34,6 @@ test.describe("NodeWeather E2E", () => {
     await page.locator("#add-fav").click();
 
     await expect(page.locator("#favorites")).toContainText(cityName);
-
     await expect(page.locator("#history")).toContainText(cityName);
   });
 });
