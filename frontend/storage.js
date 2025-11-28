@@ -68,7 +68,7 @@ export function addHistory(record) {
     date: record.date || new Date().toISOString().split("T")[0],
     city: record.city,
     temp: record.temp ?? null,
-    conditions: record.conditions ?? ""
+    conditions: record.conditions ?? "",
   };
 
   history.unshift(entry);
@@ -94,7 +94,7 @@ export function getHistoryByCity(cityName) {
 export function getStorageStats() {
   return {
     favoritesCount: getFavorites().length,
-    historyCount: getHistory().length
+    historyCount: getHistory().length,
   };
 }
 

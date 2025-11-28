@@ -65,7 +65,7 @@ historyRouter.post("/", async (req, res) => {
       date,
       city,
       temp,
-      conditions
+      conditions,
     });
   } catch (err) {
     console.error("Failed to add history record:", err);

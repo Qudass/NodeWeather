@@ -5,9 +5,9 @@ async function requestJson(path, options = {}) {
 
   const response = await fetch(url, {
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
-    ...options
+    ...options,
   });
 
   if (!response.ok) {
@@ -33,27 +33,27 @@ export async function addFavorite(city) {
     body: JSON.stringify({
       name: city.name,
       lat: city.lat,
-      lon: city.lon
-    })
+      lon: city.lon,
+    }),
   });
 }
 
 export async function getFavorites() {
   return requestJson("/favorites", {
-    method: "GET"
+    method: "GET",
   });
 }
 
 export async function removeFavorite(cityName) {
   const encoded = encodeURIComponent(cityName);
   return requestJson(`/favorites/${encoded}`, {
-    method: "DELETE"
+    method: "DELETE",
   });
 }
 
 export async function clearFavorites() {
   return requestJson("/favorites", {
-    method: "DELETE"
+    method: "DELETE",
   });
 }
 
@@ -65,23 +65,23 @@ export async function addHistory(record) {
     city: record.city,
     date: record.date,
     temp: record.temp,
-    conditions: record.conditions
+    conditions: record.conditions,
   };
 
   return requestJson("/history", {
     method: "POST",
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   });
 }
 
 export async function getHistory() {
   return requestJson("/history", {
-    method: "GET"
+    method: "GET",
   });
 }
 
 export async function clearHistory() {
   return requestJson("/history", {
-    method: "DELETE"
+    method: "DELETE",
   });
 }

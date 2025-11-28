@@ -2,7 +2,12 @@ import js from "@eslint/js";
 
 export default [
   {
-    ignores: ["node_modules/**", "frontend/vendor/**", "frontend/commits.log", "**/*.html"]
+    ignores: [
+      "node_modules/**",
+      "frontend/vendor/**",
+      "frontend/commits.log",
+      "**/*.html",
+    ],
   },
 
   js.configs.recommended,
@@ -21,9 +26,9 @@ export default [
         setTimeout: "readonly",
         confirm: "readonly",
         $: "readonly",
-        jQuery: "readonly"
-      }
-    }
+        jQuery: "readonly",
+      },
+    },
   },
 
   {
@@ -40,9 +45,9 @@ export default [
         window: "readonly",
         document: "readonly",
         localStorage: "readonly",
-        console: "readonly"
-      }
-    }
+        console: "readonly",
+      },
+    },
   },
 
   {
@@ -51,8 +56,8 @@ export default [
       sourceType: "module",
       globals: {
         console: "readonly",
-        process: "readonly"
-      }
-    }
-  }
+        process: "readonly",
+      },
+    },
+  },
 ];

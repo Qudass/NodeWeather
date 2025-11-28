@@ -5,7 +5,7 @@ import {
   clearFavorites,
   addHistory,
   getHistory,
-  clearHistory
+  clearHistory,
 } from "./services/storageApi.js";
 import { fetchWeatherByCoords } from "./services/weatherService.js";
 
@@ -23,7 +23,7 @@ const weatherIcons = {
   wind: "fas fa-wind",
   storm: "fas fa-bolt",
   thunderstorm: "fas fa-bolt",
-  default: "fas fa-cloud-sun"
+  default: "fas fa-cloud-sun",
 };
 
 function getWeatherIcon(condition) {
@@ -52,7 +52,7 @@ function formatDate(dateString) {
     return date.toLocaleDateString("uk-UA", {
       weekday: "long",
       day: "numeric",
-      month: "long"
+      month: "long",
     });
   }
 }
@@ -67,7 +67,9 @@ $(document).ready(function () {
       let out = "";
 
       // Filter cities by selected country
-      const filteredCities = cities.filter((city) => city.country === selectedCountry);
+      const filteredCities = cities.filter(
+        (city) => city.country === selectedCountry
+      );
 
       if (filteredCities.length > 0) {
         for (const city of filteredCities) {
@@ -103,7 +105,7 @@ $(document).ready(function () {
       selectedCity = {
         lat: $cityElement.data("lat"),
         lon: $cityElement.data("lon"),
-        name: $cityElement.text()
+        name: $cityElement.text(),
       };
 
       // Add visual feedback
@@ -125,7 +127,6 @@ $(document).ready(function () {
       $("#add-fav").prop("disabled", false);
     }
 
-
     // Add to favorites
     $("#add-fav").on("click", async function () {
       if (!selectedCity) return;
@@ -137,17 +138,20 @@ $(document).ready(function () {
         // Show success feedback
         const $btn = $(this);
         const originalText = $btn.html();
-        $btn.html('<i class="fas fa-check"></i> Додано!').prop("disabled", true);
+        $btn
+          .html('<i class="fas fa-check"></i> Додано!')
+          .prop("disabled", true);
 
         setTimeout(() => {
           $btn.html(originalText).prop("disabled", false);
         }, 2000);
       } catch (e) {
         console.error("Failed to add favorite:", e);
-        window.alert("Не вдалося додати місто до улюблених. Спробуйте пізніше.");
+        window.alert(
+          "Не вдалося додати місто до улюблених. Спробуйте пізніше."
+        );
       }
     });
-
 
     // Clear favorites
     $("#clear-fav").on("click", async function () {
@@ -164,7 +168,6 @@ $(document).ready(function () {
       }
     });
 
-
     // Clear history
     $("#clear-history").on("click", async function () {
       if (!confirm("Ви впевнені, що хочете очистити історію пошуку?")) {
@@ -179,7 +182,6 @@ $(document).ready(function () {
         window.alert("Не вдалося очистити історію пошуку. Спробуйте пізніше.");
       }
     });
-
 
     // Render favorites with enhanced UI
     async function renderFavorites() {
@@ -217,24 +219,26 @@ $(document).ready(function () {
         $favoritesContainer.html(`<ul>${out}</ul>`);
 
         // Add click handlers
-        $favoritesContainer.find(".favorite-city").on("click", async function () {
-          const cityData = {
-            lat: $(this).data("lat"),
-            lon: $(this).data("lon"),
-            name: $(this).data("name")
-          };
+        $favoritesContainer
+          .find(".favorite-city")
+          .on("click", async function () {
+            const cityData = {
+              lat: $(this).data("lat"),
+              lon: $(this).data("lon"),
+              name: $(this).data("name"),
+            };
 
-          selectedCity = cityData;
+            selectedCity = cityData;
 
-          try {
-            await addHistory({ city: cityData.name });
-            await renderHistory();
-          } catch (e) {
-            console.error("Failed to add history record from favorites:", e);
-          }
+            try {
+              await addHistory({ city: cityData.name });
+              await renderHistory();
+            } catch (e) {
+              console.error("Failed to add history record from favorites:", e);
+            }
 
-          loadWeather(cityData.lat, cityData.lon, cityData.name);
-        });
+            loadWeather(cityData.lat, cityData.lon, cityData.name);
+          });
 
         $favoritesContainer.find("button").on("click", async function (e) {
           e.stopPropagation();
@@ -245,7 +249,9 @@ $(document).ready(function () {
             await renderFavorites();
           } catch (e2) {
             console.error("Failed to remove favorite:", e2);
-            window.alert("Не вдалося видалити місто з улюблених. Спробуйте пізніше.");
+            window.alert(
+              "Не вдалося видалити місто з улюблених. Спробуйте пізніше."
+            );
           }
         });
       } catch (e) {
@@ -258,7 +264,6 @@ $(document).ready(function () {
         `);
       }
     }
-
 
     // Render history with enhanced UI
     async function renderHistory() {
@@ -301,7 +306,6 @@ $(document).ready(function () {
         `);
       }
     }
-
 
     // Enhanced weather loading function
     function loadWeather(lat, lon, cityName) {
