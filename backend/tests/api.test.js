@@ -13,8 +13,27 @@ import { db, run } from "../src/db/db.js";
 
 let app;
 
-beforeAll(() => {
+beforeAll(async () => {
   app = createApp();
+
+  await run(
+    `CREATE TABLE IF NOT EXISTS favorites (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT UNIQUE NOT NULL,
+      lat REAL NOT NULL,
+      lon REAL NOT NULL
+    )`
+  );
+
+  await run(
+    `CREATE TABLE IF NOT EXISTS history (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      date TEXT NOT NULL,
+      city TEXT NOT NULL,
+      temp REAL,
+      conditions TEXT
+    )`
+  );
 });
 
 beforeEach(async () => {
