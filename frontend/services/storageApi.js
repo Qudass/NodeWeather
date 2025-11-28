@@ -1,4 +1,7 @@
-const API_BASE = "http://localhost:4000/api";
+const API_BASE =
+  window.location.hostname === "localhost"
+    ? "http://localhost:4000/api"
+    : "https://nodeweather-backend.onrender.com/api";
 
 async function requestJson(path, options = {}) {
   const url = `${API_BASE}${path}`;
