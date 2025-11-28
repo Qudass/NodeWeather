@@ -1,0 +1,24 @@
+name: NodeWeather CD
+
+on:
+  push:
+    branches: [main, master]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Render deploy (backend)
+        if: env.RENDER_DEPLOY_BACKEND != ''
+        run: |
+          curl -X POST "$RENDER_DEPLOY_BACKEND"
+        env:
+          RENDER_DEPLOY_BACKEND: ${{ secrets.RENDER_DEPLOY_BACKEND }}
+
+      - name: Trigger Render deploy (frontend)
+        if: env.RENDER_DEPLOY_FRONTEND != ''
+        run: |
+          curl -X POST "$RENDER_DEPLOY_FRONTEND"
+        env:
+          RENDER_DEPLOY_FRONTEND: ${{ secrets.RENDER_DEPLOY_FRONTEND }}
