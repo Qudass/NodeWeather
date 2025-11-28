@@ -1,34 +1,61 @@
-name: Node.js CI
+name: NodeWeather CI
 
 on:
   push:
-    branches: ["main", "master"]
+    branches: [main, master]
   pull_request:
-    branches: ["main", "master"]
+    branches: [main, master]
 
 jobs:
-  build:
+  build-and-test:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: 20
+          cache: npm
 
-      - name: Install dependencies
+      - name: Install root dependencies
         run: npm ci
 
-      - name: Check Code Style (Prettier)
-        run: npx prettier --check .
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm ci
 
-      - name: Validate Commit Messages
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm ci
+
+      - name: Check code style (Prettier)
+        run: npm run format:check
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run backend unit tests
+        working-directory: backend
+        run: npm test
+
+      - name: Run frontend unit tests
+        working-directory: frontend
+        run: npm test
+
+      - name: Validate commit messages (Conventional Commits)
+        if: github.event_name == 'pull_request'
         uses: wagoid/commitlint-github-action@v6
         with:
           configFile: commitlint.config.js
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright E2E tests
+        env:
+          CI: true
+        run: npx playwright test
