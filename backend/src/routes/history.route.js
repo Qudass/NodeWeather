@@ -11,9 +11,7 @@ export const historyRouter = Router();
 // GET /api/history?limit=10
 historyRouter.get("/", async (req, res) => {
   try {
-    const limit = req.query.limit
-      ? parseInt(req.query.limit, 10)
-      : undefined;
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : undefined;
 
     const rows = await listHistory(limit);
     res.json(rows);
@@ -51,9 +49,7 @@ historyRouter.delete("/", async (req, res) => {
 // DELETE /api/history/cleanup?days=30
 historyRouter.delete("/cleanup", async (req, res) => {
   try {
-    const daysParam = req.query.days
-      ? parseInt(req.query.days, 10)
-      : undefined;
+    const daysParam = req.query.days ? parseInt(req.query.days, 10) : undefined;
 
     const result = await cleanupOldHistory(daysParam);
     res.json({ success: true, ...result });

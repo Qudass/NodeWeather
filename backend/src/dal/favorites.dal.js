@@ -1,17 +1,11 @@
 import { all, get, run } from "../db/db.js";
 
 export async function getAllFavorites() {
-  return all(
-    "SELECT name, lat, lon FROM favorites ORDER BY id DESC",
-    []
-  );
+  return all("SELECT name, lat, lon FROM favorites ORDER BY id DESC", []);
 }
 
 export async function findFavoriteByName(name) {
-  return get(
-    "SELECT name, lat, lon FROM favorites WHERE name = ?",
-    [name]
-  );
+  return get("SELECT name, lat, lon FROM favorites WHERE name = ?", [name]);
 }
 
 export async function insertFavorite({ name, lat, lon }) {
