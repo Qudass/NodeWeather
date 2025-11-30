@@ -47,3 +47,18 @@ historyRouter.delete("/", async (req, res) => {
     res.status(500).json({ error: "Failed to clear history" });
   }
 });
+
+// DELETE /api/history/cleanup?days=30
+historyRouter.delete("/cleanup", async (req, res) => {
+  try {
+    const daysParam = req.query.days
+      ? parseInt(req.query.days, 10)
+      : undefined;
+
+    const result = await cleanupOldHistory(daysParam);
+    res.json({ success: true, ...result });
+  } catch (err) {
+    console.error("Failed to cleanup history:", err);
+    res.status(500).json({ error: "Failed to cleanup history" });
+  }
+});
