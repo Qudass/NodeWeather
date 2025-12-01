@@ -7,6 +7,10 @@ export default [
       "frontend/vendor/**",
       "frontend/commits.log",
       "**/*.html",
+      "frontend/.stryker-tmp/**",
+      "frontend/reports/**",
+      "playwright-report/**",
+      "test-results/**",
     ],
   },
 

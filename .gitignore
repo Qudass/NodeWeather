@@ -1,21 +1,48 @@
-node_modules/
-.env
-.env.local
-coverage/
-dist/
+# OS / IDE
 .DS_Store
-.vscode/
+**/.DS_Store
+Thumbs.db
 .idea/
+.vscode/
+*.swp
+*.swo
+
+# Node modules
+node_modules/
+
+# Logs
+logs/
 *.log
-*.db
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build / dist
+dist/
+build/
+frontend/dist/
+backend/dist/
+
+# Coverage / test artifacts
+coverage/
+frontend/coverage/
+backend/coverage/
+.nyc_output/
 
 # Playwright
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
+playwright-report/
+test-results/
+.playwright/
 
 # Stryker
-.stryker-tmp
-reports
+frontend/.stryker-tmp/
+frontend/reports/
+
+# Temp / cache
+*.pid
+*.pid.lock
+.tmp/
+temp/
+
+backend/weather.db

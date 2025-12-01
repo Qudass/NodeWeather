@@ -13,11 +13,9 @@ test.describe("NodeWeather E2E", () => {
   }) => {
     await page.goto("/");
 
-    await page.waitForResponse(
-      (resp) => resp.url().includes("current.city.list.json") && resp.ok()
-    );
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(500);
 
-    await page.waitForTimeout(1500);
     await page.selectOption("#country-select", { label: "🇺🇦 Україна" });
 
     const firstCity = page.locator("#city-list p").first();
